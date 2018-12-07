@@ -24,8 +24,8 @@ public class OrderApplicationTest {
 
     @Test
     public void contextLoads(){
-
-        sender.send();
+//        sender.send();
+        sender.sendComputer();
     }
 
 }

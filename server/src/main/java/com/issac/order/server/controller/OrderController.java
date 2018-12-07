@@ -1,5 +1,6 @@
 package com.issac.order.server.controller;
 
+import com.issac.order.server.dataobject.OrderMaster;
 import com.issac.order.server.form.OrderForm;
 import com.issac.order.server.service.OrderService;
 import com.issac.order.server.util.ResultVOUtil;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * author:  ywy
@@ -35,10 +37,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-//    @Autowired
-//    private BuyerService buyerService;
-
-    // 创建订单
+    /**
+     *     创建订单
+     */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
     public ResultVO<Map<String, String>> create(@Valid OrderForm orderForm,
@@ -93,5 +94,20 @@ public class OrderController {
 //        buyerService.cancelOrder(openid,orderId);
 //        return ResultVOUtil.success();
 //    }
+
+    /**
+     * 完结订单
+     * @param orderId
+     * @return
+     */
+    @PostMapping("/finish")
+    public ResultVO cancel(@RequestParam("orderId") String orderId) {
+
+        // 1.  查询订单
+        OrderDTO orderDTO = orderService.findOne(orderId);
+
+        orderService.finish(orderDTO);
+        return ResultVOUtil.success();
+    }
 
 }

@@ -7,10 +7,47 @@ spring:
         enabled: true
         service-id: CONFIG
       profile: dev
-  rabbitmq:
+    stream:
+      bindings:
+        input:
+          group: order
+          content-type: application/json
+  redis:
     host: localhost
-    port: 5672
+    port: 6379
+  zipkin:
+    base-url: http://zipkin:9411
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      probability: 1.0
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8762/eureka/
+      defaultZone: http://eureka1:8761/eureka/,http://eureka2:8762/eureka/
+  instance:
+    prefer-ip-address: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds:  30000
+    getProductInfoList:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds:  30000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+logging:
+  level:
+    org.springframework.cloud.openfeign: debug
+server:
+  port: 8091
